@@ -1,0 +1,47 @@
+# Graph coloring / M-coloring
+def is_safe(node, color, graph, assigned_colors):
+    """Check if the current color assignment is valid"""
+    for neighbor in graph[node]:
+        if assigned_colors[neighbor] == color:
+            return False
+    return True
+
+def graph_coloring_util(graph, colors, assigned_colors, node, N, solutions):
+    """Recursive function to color the graph using backtracking"""
+    if node == N: 
+        solutions.append(tuple(assigned_colors[:]))  
+        return
+
+    for color in colors:
+        if is_safe(node, color, graph, assigned_colors):
+            assigned_colors[node] = color  
+            graph_coloring_util(graph, colors, assigned_colors, node + 1, N, solutions)  
+            assigned_colors[node] = None 
+
+def create_graph(N):
+    """Creates a graph with exactly 3 edges"""
+    graph = {i: [] for i in range(N)}
+    
+  
+    graph[0] = [1, 2]  
+    graph[1] = [0, 2]  
+    graph[2] = [0, 1]   
+    return graph
+
+def graph_coloring(N):
+    """Main function to solve the graph coloring problem"""
+    colors = ["R", "G", "B"]  
+    graph = create_graph(N)  
+    assigned_colors = [None] * N 
+    solutions = [] 
+
+    graph_coloring_util(graph, colors, assigned_colors, 0, N, solutions)
+
+ 
+    unique_solutions = list(set(solutions))[:6]
+
+    print("\nPossible Colorings:")
+    for sol in unique_solutions:
+        print(sol)
+
+graph_coloring(3)
