@@ -1,0 +1,32 @@
+def tsp_dp(graph, start):
+    n, memo = len(graph), {}
+    
+    def dp(mask, pos):
+        if mask == (1 << n) - 1: return graph[pos][start]
+        if (mask, pos) in memo: return memo[(mask, pos)]
+        
+        memo[(mask, pos)] = min(graph[pos][city] + dp(mask | (1 << city), city) 
+                                for city in range(n) if not mask & (1 << city))
+        return memo[(mask, pos)]
+    
+    return dp(1 << start, start)
+
+graph = [[0, 10, 15, 20], [5, 0, 25, 10], [15, 30, 0, 5], [15, 10, 20, 0]]
+print("Minimum cost of TSP:", tsp_dp(graph, 0))
+
+
+def tsp_recursive(graph, mask, pos, start, memo):
+    if mask == (1 << len(graph)) - 1:
+        return graph[pos][start]
+    if (mask, pos) in memo:
+        return memo[(mask, pos)]
+    
+    memo[(mask, pos)] = min(graph[pos][city] + tsp_recursive(graph, mask | (1 << city), city, start, memo) 
+                            for city in range(len(graph)) if not mask & (1 << city))
+    return memo[(mask, pos)]
+
+def tsp(graph, start=0):
+    return tsp_recursive(graph, 1 << start, start, start, {})
+
+graph = [[0, 10, 15, 20], [5, 0, 25, 10], [15, 30, 0, 5], [15, 10, 20, 0]]
+print("Minimum cost of TSP:", tsp(graph))
