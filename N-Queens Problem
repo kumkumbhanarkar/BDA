@@ -1,0 +1,53 @@
+# N queens
+def print_solution(board, N, mirrored=False):
+    labeled_board = [['.' for _ in range(N)] for _ in range(N)]
+    
+    if mirrored:
+        board = board[::-1] 
+
+    for index, col in enumerate(reversed(range(N)) if mirrored else range(N)):
+        row = board[index]
+        labeled_board[row][col] = f'Q{index + 1}'
+
+    print("\n" + ("Mirrored " if mirrored else "") + "Solution (Matrix View):")
+    for row in labeled_board:
+        print(" ".join(row)) 
+
+    print("\n" + ("Mirrored " if mirrored else "") + "Queen Positions (Row, Column):")
+    for index, col in enumerate(reversed(range(N)) if mirrored else range(N)):
+        row = board[index]
+        print(f"Q{index + 1} -> ({row + 1}, {col + 1})")
+
+    print("\n" + "-" * (4 * N)) 
+
+
+def is_safe(board, row, col):
+    for i in range(col):
+        if board[i] == row or \
+           board[i] - i == row - col or \
+           board[i] + i == row + col:
+            return False
+    return True
+
+def solve_n_queens_util(board, col, N):
+    if col >= N:
+        print_solution(board, N) 
+        print_solution(board, N, mirrored=True) 
+        return True  
+
+    for row in range(N):
+        if is_safe(board, row, col):
+            board[col] = row 
+            if solve_n_queens_util(board, col + 1, N):
+                return True  
+            board[col] = -1  
+
+    return False
+
+def solve_n_queens(N):
+    board = [-1] * N  
+    if not solve_n_queens_util(board, 0, N):
+        print("\nNo solution exists for N =", N)
+
+N = int(input("Enter the number of queens (N): "))
+solve_n_queens(N)
