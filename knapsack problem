@@ -1,0 +1,13 @@
+weights = [18,15,10]
+profit = [25,24,15]
+capacity = 20
+item = sorted(zip(weights,profit),key=lambda x:x[1]/x[0],reverse =True)
+total_profit= 0
+for weights,profit in item :
+    if capacity>= weights :
+        total_profit += profit 
+        capacity -=weights
+    else:
+        total_profit += (profit/weights)*capacity
+        break
+print("Maximum Profit : ", total_profit)
